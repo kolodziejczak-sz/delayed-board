@@ -1,0 +1,11 @@
+gra planszowa: szachownica 8x8,
+bufor 3-5 ruchów,
+rodzaje ruchów:
+
+Idle
+Defense
+Move
+Attack
+Sniper
+Grenade
+Mine

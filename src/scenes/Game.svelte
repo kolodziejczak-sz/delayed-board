@@ -1,0 +1,1 @@
+<h1>Hello game</h1>
