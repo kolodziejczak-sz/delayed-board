@@ -1,4 +1,4 @@
-<h1>Hello menu</h1>
+<h1>Hello menu!!</h1>
 <button on:click={foo}>Start game</button>
 
 <script>
