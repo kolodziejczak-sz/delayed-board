@@ -3,4 +3,7 @@ import { applyMiddleware } from 'redux'
 import logger from './utils/logger';
 import rootReducer from './reducers/';
 
-export default createStore(rootReducer, applyMiddleware(logger))
+const store = createStore(rootReducer, applyMiddleware(logger));
+
+export const { dispatch } = store;
+export default store; 
