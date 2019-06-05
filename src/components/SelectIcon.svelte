@@ -29,19 +29,18 @@
   import icons from '../constans/icons.js';
 
   export let selected = icons[0];
+  const emit = createEventDispatcher();
+
   $: selectedIdx = icons.indexOf(selected);
 
-  const dispatch = createEventDispatcher();
-
   function next() {
-    onSelect((selectedIdx + 1) % icons.length);
+    emitSelect((selectedIdx + 1) % icons.length);
   }
   function prev() {
-    onSelect((selectedIdx - 1 + icons.length) % icons.length);
+    emitSelect((selectedIdx - 1 + icons.length) % icons.length);
   }
 
-  function onSelect(idx) {
-    selected = icons[idx];
-    dispatch('select', { icon: icons[idx] });
+  function emitSelect(idx) {
+    emit('select', { icon: icons[idx] });
   }
 </script>

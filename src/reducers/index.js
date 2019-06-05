@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
 import scene from './scene';
-import players from './players';
+import users from './users';
 
 export default combineReducers({
   scene,
-  players
+  users
 });
