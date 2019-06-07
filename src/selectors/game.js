@@ -1,13 +1,21 @@
 export function getPlayers(state) {
-  const arr = (state.game || {}).objects || [];
+  const arr = Object.values(state.game.entities);
   return arr.filter(o => o.type === 'PLAYER');
 }
 
 export function getPlayer(state, id) {
-  return getPlayers(state).filter(p => p.id === id).pop();
+  return state.game.entities[id];
 }
 
 export function getCurrentPlayer(state) {
-  const playerId = state.turn;
-  return getPlayer(playerId)
+  const playerId = state.game.turn;
+  return getPlayer(state, playerId)
+}
+
+export function getWinnerPlayer(state) {
+  return getPlayer(state, state.game.winner);
+}
+
+export function isGameEnd(state) {
+  return state.game.isEnd;
 }
