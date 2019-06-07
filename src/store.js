@@ -1,19 +1,16 @@
-import { createStore } from './utils/redux';
 import { applyMiddleware } from 'redux'
+import { createStore } from './utils/redux';
 import logger from './utils/logger';
 import autoSave from './utils/auto-save';
-import rootReducer from './reducers/';
 import { Storage } from './utils/storage';
-import storageSettings  from './constants/storage-settings';
+import { appUuid }  from './constants/settings';
+import rootReducer from './reducers/';
 
-function loadState() {
-  if(Storage.has(storageSettings.key)) {
-    return Storage.get(storageSettings.key);
-  }
-  return undefined;
+const loadState = () => {
+  return Storage.has(appUuid) ? Storage.get(appUuid) : undefined;
 }
 
-const store = createStore(rootReducer, loadState(), applyMiddleware(logger, autoSave));
+const initialState = loadState();
+const store = createStore(rootReducer, initialState, applyMiddleware(logger, autoSave));
 
-export const { dispatch } = store;
 export default store; 

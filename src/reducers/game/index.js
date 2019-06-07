@@ -1,7 +1,7 @@
 import { createReducers } from 'redux-arc';
 import { types } from '../../actions/game';
 
-import gameSettings from '../../constants/game-settings';
+import { generalSettings as gameSettings } from '../../constants/settings';
 import { onMove } from './move';
 import { onSurrender } from './surrender';
 import { onStart } from './start';

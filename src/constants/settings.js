@@ -1,6 +1,14 @@
 import cards from './cards';
 import ranges from './ranges';
 
+export const appUuid = 'gameV1';
+
+export const generalSettings = {
+  boardSize: 8,
+  players: 2,
+  bufferSize: 5
+};
+
 export const deckComponents = {
   [cards.Move]: 5,
   [cards.Idle]: 2,
@@ -10,7 +18,7 @@ export const deckComponents = {
   [cards.Mine]: 1 
 }
 
-export const cardStatistics = {
+export const deckStats = {
   [cards.Idle]: { damage: 0, range: ranges.Nil },
   [cards.Move]: { damage: 25, range: ranges.Short },
   [cards.Attack]: { damage: 25, range: ranges.Long },
@@ -18,5 +26,3 @@ export const cardStatistics = {
   [cards.Sniper]: { damage: 50, range: ranges.Full },
   [cards.Mine]: { damage: 100, range: ranges.Nil } 
 }
-
-export default deckComponents;
