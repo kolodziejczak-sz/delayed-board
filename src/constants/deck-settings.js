@@ -1,22 +1,22 @@
-import card from './cards';
-import range from './range';
+import cards from './cards';
+import ranges from './ranges';
 
 export const deckComponents = {
-  [card.Move]: 5,
-  [card.Idle]: 2,
-  [card.Attack]: 3,
-  [card.Grenade]: 2,
-  [card.Sniper]: 1,
-  [card.Mine]: 1 
+  [cards.Move]: 5,
+  [cards.Idle]: 2,
+  [cards.Attack]: 3,
+  [cards.Grenade]: 2,
+  [cards.Sniper]: 1,
+  [cards.Mine]: 1 
 }
 
 export const cardStatistics = {
-  [card.Idle]: { damage: 0, range: range.Nil },
-  [card.Move]: { damage: 25, range: range.Short },
-  [card.Attack]: { damage: 25, range: range.Long },
-  [card.Grenade]: { damage: 25, range: range.Cross },
-  [card.Sniper]: { damage: 50, range: range.Full },
-  [card.Mine]: { damage: 100, range: range.Nil } 
+  [cards.Idle]: { damage: 0, range: ranges.Nil },
+  [cards.Move]: { damage: 25, range: ranges.Short },
+  [cards.Attack]: { damage: 25, range: ranges.Long },
+  [cards.Grenade]: { damage: 25, range: ranges.Cross },
+  [cards.Sniper]: { damage: 50, range: ranges.Full },
+  [cards.Mine]: { damage: 100, range: ranges.Nil } 
 }
 
 export default deckComponents;

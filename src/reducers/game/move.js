@@ -1,4 +1,8 @@
-import { getPlayers } from '../../selectors/game';
+import entities from '../../constants/entities';
+
+export function getPlayers(state) {
+  return Object.values(state.entities).filter(e => e.type === entities.Player);
+}
 
 function calcNextPlayer(players, currentId) {
   const idx = players.map(p => p.id).indexOf(currentId);
@@ -10,8 +14,7 @@ function calcNextPlayer(players, currentId) {
 
 export const onMove = (state, action) => {
   const move = action.payload.card;
-  const wrappedState = { game: state };
-  const players = getPlayers(wrappedState);
+  const players = getPlayers(state);
 
   let roundMoves = state.roundMoves.concat([ { [playerId]: move } ]);
 

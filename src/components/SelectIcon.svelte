@@ -26,7 +26,7 @@
 
 <script>
 	import { createEventDispatcher } from 'svelte';
-  import icons from '../constans/icons.js';
+  import icons from '../constants/icons.js';
 
   export let selected = icons[0];
   const emit = createEventDispatcher();

@@ -1,6 +1,8 @@
+import entities from '../constants/entities';
+
 export function getPlayers(state) {
   const arr = Object.values(state.game.entities);
-  return arr.filter(o => o.type === 'PLAYER');
+  return arr.filter(e => e.type === entities.Player);
 }
 
 export function getPlayer(state, id) {

@@ -1,5 +1,5 @@
 export default {
   id: 0,
-  type: 'ANY',
+  type: null,
   position: null
 }

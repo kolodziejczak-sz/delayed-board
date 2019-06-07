@@ -1,6 +1,6 @@
 import { createReducers } from 'redux-arc';
 import { types } from '../actions/users';
-import icons from '../constans/icons';
+import icons from '../constants/icons';
 
 const initialState = [
   {

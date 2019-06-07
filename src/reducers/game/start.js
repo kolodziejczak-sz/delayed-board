@@ -1,6 +1,6 @@
 import deckSettings from '../../constants/deck-settings';
 import { createPlayer } from '../../models/player';
-import { getRandomPosition } from '../../models/position';
+import { createRandomPosition } from '../../models/position';
 import { createDeck } from '../../models/card';
 
 export const onStart = (state, action) => {
@@ -9,7 +9,7 @@ export const onStart = (state, action) => {
 
   const players = users.map((user, idx) => createPlayer(user, { 
     cards: createDeck(deckSettings),
-    position: getRandomPosition(0, mapMaxIdx, (idx * 5), (idx * 5 + 2))
+    position: createRandomPosition(0, mapMaxIdx, (idx * 5), (idx * 5 + 2))
   }));
 
   const entities = [ ...players ].reduce((acc, e) => (acc[e.id] = e, acc), {});

@@ -12,7 +12,7 @@ export function createPosition(x, y, dir) {
   }
 }
 
-export function getRandomPosition(colMin, colMax, rowMin, rowMax) {
+export function createRandomPosition(colMin, colMax, rowMin, rowMax) {
   return {
     x: getRandomInteger(colMin, colMax),
     y: getRandomInteger(rowMin, rowMax),
