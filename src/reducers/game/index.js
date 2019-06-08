@@ -11,7 +11,6 @@ const defaultGame = {
   round: 0,
   roundMoves: [],
   turn: null,
-  nextTurn: null,
   isEnd: null,
   winner: null,
   entities: [],

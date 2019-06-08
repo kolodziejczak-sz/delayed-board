@@ -1,3 +1,4 @@
 export default {
-  Player: 0
+  Player: 0,
+  Mine: 1
 }

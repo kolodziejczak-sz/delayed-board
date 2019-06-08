@@ -6,7 +6,8 @@ export const appUuid = 'gameV1';
 export const generalSettings = {
   boardSize: 8,
   players: 2,
-  bufferSize: 5
+  bufferSize: 5,
+  maxHealth: 100
 };
 
 export const deckComponents = {

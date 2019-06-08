@@ -19,8 +19,7 @@ export const onStart = (state, action) => {
     isEnd: false,
     entities,
     round: 0,
-    roundMoves: [],
-    turn: players[0].id,
-    nextTurn: players[1].id,
+    roundMoves: 0,
+    turn: players[0].id
   }
 };

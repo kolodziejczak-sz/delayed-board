@@ -1,5 +1,5 @@
 export function createCard(type) {
-  return { type }
+  return { type, dir }
 }
 
 export function createCards(type, number) {

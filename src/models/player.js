@@ -1,11 +1,13 @@
 import entity from './entity';
+import entities from '../constants/entities';
+import generalSettings from '../constants/settings';
 import { getUuid } from '../utils/numbers';
 
 const playerBase = {
   ...entity,
-  type: 'PLAYER',
+  type: entities.Player,
+  health: generalSettings.maxHealth,
   user: null,
-  health: 100,
   cards: [],
   buffer: [],
 }
