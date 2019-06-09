@@ -12,6 +12,7 @@
 <button on:click={_ => changeScene('Menu')}>Menu</button>
 <button on:click={startGame}>Reset</button>
 <button on:click={surrender}>Surrender</button>
+<button on:click={move}>Move</button>
 
 <script>
   import { onMount } from 'svelte';
@@ -20,12 +21,14 @@
   import { creators as gameActions } from '../actions/game'
   import { getPlayers, getCurrentPlayer, getWinnerPlayer, isGameEnd } from '../selectors/game'
 
-  onMount(startGame);
-
   function startGame() {
     const users = $store.users;
     store.dispatch(gameActions.start({ users }))
+  }
 
+  function move() {
+    const card = { type: 3, dir: 1 }
+    store.dispatch(gameActions.move({ card }));
   }
 
   function changeScene(scene) {
@@ -40,4 +43,6 @@
   $: players = getPlayers($store);
   $: winner = getWinnerPlayer($store);
   $: gameEnd = isGameEnd($store);
+
+  onMount(startGame);
 </script>

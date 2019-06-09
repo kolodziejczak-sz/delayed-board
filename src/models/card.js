@@ -1,5 +1,5 @@
 export function createCard(type) {
-  return { type }
+  return { type: Number(type) }
 }
 
 export function createCards(type, number) {

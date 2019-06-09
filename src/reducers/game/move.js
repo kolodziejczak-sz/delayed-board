@@ -1,30 +1,20 @@
-import entities from '../../constants/entities';
-import { deckComponents, deckStats } from '../../constants/settings';
-import dirs from '../../constants/dirs';
 import cards from '../../constants/cards';
-import { movePos, isPositionEqual } from '../../models/position';
+import { movePos } from '../../models/position';
 import { createMine } from '../../models/mine';
-import { getPlayers, calcNextPlayerId } from './helpers';
+import { getPlayers, calcNextPlayerId, getWinnerId } from './helpers';
 
-const getEntitiesFromPos = (entities, pos) => (Object.values(entities).filter(e => isPositionEqual((e.position, pos))));
-const isInvalidPos = (pos, boardSize) => (pos.x === boardSize || pos.x === -1 || pos.y === boardSize || pos.y === -1)  
-const isPlayerHasCard = (player, card) => Boolean(player.cards.find(c => c.type === card.type));
 const isRoundOver = (players, roundMoves) => (players.length === roundMoves);
-const getWinner = (players) => {
-  const playersAlive = players.filter(p => p.health > 0);
-  if(playersAlive.length === 1) {
-    return playersAlive[0];
-  }
-  return null;
-} 
+const isPlayerHasCard = (player, card) => Boolean(player.cards.find(c => c.type === card.type));
+const isInvalidPos = (pos, boardSize) => (pos.x === boardSize || pos.x === -1 
+                                       || pos.y === boardSize || pos.y === -1)  
 
 const switchCardsFromBuffers = (players) => {
   return players.map(p => {
-    let [move, ...restBuffer] =  p.buffer;
+    const [head, ...restBuffer] =  p.buffer;
     return {
       ...p,
       buffer: restBuffer,
-      cards: [ move, ...p.cards ]
+      cards: [ head, ...p.cards ]
     }
   })
 }
@@ -39,6 +29,7 @@ const switchCardToBuffer = (player, card) => {
   return {
     ...player,
     cards: cards.slice(cardIdx, cardIdx + 1),
+    // TODO: POPRAWIĆ
     buffer: [ ...player.buffer, card]
   }
 }
@@ -83,19 +74,20 @@ export const onMove = (state, action) => {
   }
 
   player = switchCardToBuffer(player, card);
+  console.log(player);
 
-  let players = getPlayers(entities);
+  let players = getPlayers(state);
   let roundMoves = state.roundMoves + 1;
-  const nextPlayerId = calcNextPlayerId(players, player.id);
+  const nextPlayerId = calcNextPlayerId(state);
   const turn = nextPlayerId;
 
   if(isRoundOver(players, roundMoves)) {
     players = switchCardsFromBuffers(players);
     entities = executeMoves(players, state.boardSize);
-    players = getPlayers(entities);
+    players = getPlayers({ entities });
     roundMoves = 0;
 
-    if(winner = getWinner(players)) {
+    if(winner = getWinnerId(state)) {
       isEnd = true;
     }
   }
