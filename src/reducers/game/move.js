@@ -52,34 +52,31 @@ const switchCardToBuffer = (player, card) => {
 }
 
 const executeMoves = (entities, mapSize) => {
+  const newEntities = {};
   const players = Object.values(entities.filter(e => e.type === entities.Player));
   const moves = players.filter(e => e.type === entities.Player)
                   .map(p => ({ player: p, card: p.cards[0] }));
-  const newEntities = {};
 
-  for(let move, i = 0; i < moves.length; i ++) {
-    move = moves[i];
-
-    switch(move.card.type) {
+  moves.forEach(({ player, card }) => {
+    switch(card.type) {
       case cards.Move:
-        let currPos = move.player.position;
-        let newPos = movePos(currPos, move.card.dir);
+        let currPos = player.position;
+        let newPos = movePos(currPos, card.dir);
         if(isInvalidPos(newPos, mapSize)) {
-          continue;
+          return;
         }
-        // TODO: kolizje
-
+        newEntities[player.id] = {
+          ...player,
+          position: newPos
+        }
         break;
       case cards.Mine:
         const mine = createMine({ position: currPos })
         newEntities[mine.id] = mine;
         break;
     }
-  }
-  const entities = {
-    ...state.entities,
-    ...players.reduce((e, p) => (e[p.id]=p, e), {})
-  }
+  });
+  return Object.assign({}, entities, newEntities);
 }
 
 export const onMove = (state, action) => {
