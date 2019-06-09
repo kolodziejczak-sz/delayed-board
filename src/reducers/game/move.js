@@ -7,7 +7,7 @@ import { createMine } from '../../models/mine';
 import { getPlayers, calcNextPlayerId } from './helpers';
 
 const getEntitiesFromPos = (entities, pos) => (Object.values(entities).filter(e => isPositionEqual((e.position, pos))));
-const isInvalidPos = (pos, mapSize) => (pos.x === mapSize || pos.x === -1 || pos.y === mapSize || pos.y === -1)  
+const isInvalidPos = (pos, boardSize) => (pos.x === boardSize || pos.x === -1 || pos.y === boardSize || pos.y === -1)  
 const isPlayerHasCard = (player, card) => Boolean(player.cards.find(c => c.type === card.type));
 const isRoundOver = (players, roundMoves) => (players.length === roundMoves);
 const getWinner = (players) => {
@@ -43,7 +43,7 @@ const switchCardToBuffer = (player, card) => {
   }
 }
 
-const executeMoves = (entities, mapSize) => {
+const executeMoves = (entities, boardSize) => {
   const newEntities = {};
   const players = Object.values(entities.filter(e => e.type === entities.Player));
   const moves = players.filter(e => e.type === entities.Player)
@@ -54,7 +54,7 @@ const executeMoves = (entities, mapSize) => {
       case cards.Move:
         let currPos = player.position;
         let newPos = movePos(currPos, card.dir);
-        if(isInvalidPos(newPos, mapSize)) {
+        if(isInvalidPos(newPos, boardSize)) {
           return;
         }
         newEntities[player.id] = {
@@ -86,12 +86,12 @@ export const onMove = (state, action) => {
 
   let players = getPlayers(entities);
   let roundMoves = state.roundMoves + 1;
-  const nextPlayer = calcNextPlayerId(players, player.id);
-  const turn = nextPlayer.id;
+  const nextPlayerId = calcNextPlayerId(players, player.id);
+  const turn = nextPlayerId;
 
   if(isRoundOver(players, roundMoves)) {
     players = switchCardsFromBuffers(players);
-    entities = executeMoves(players, state.mapSize);
+    entities = executeMoves(players, state.boardSize);
     players = getPlayers(entities);
     roundMoves = 0;
 
