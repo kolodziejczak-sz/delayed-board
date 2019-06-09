@@ -10,6 +10,7 @@
 {/if}
 
 <button on:click={_ => changeScene('Menu')}>Menu</button>
+<button on:click={startGame}>Reset</button>
 <button on:click={surrender}>Surrender</button>
 
 <script>
@@ -19,10 +20,13 @@
   import { creators as gameActions } from '../actions/game'
   import { getPlayers, getCurrentPlayer, getWinnerPlayer, isGameEnd } from '../selectors/game'
 
-  onMount(() => {
+  onMount(startGame);
+
+  function startGame() {
     const users = $store.users;
     store.dispatch(gameActions.start({ users }))
-  })
+
+  }
 
   function changeScene(scene) {
     store.dispatch(sceneActions.changeScene(scene));
