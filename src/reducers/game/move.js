@@ -4,7 +4,7 @@ import dirs from '../../constants/dirs';
 import cards from '../../constants/cards';
 import { movePos, isPositionEqual } from '../../models/position';
 import { createMine } from '../../models/mine';
-import { getPlayers, calcNextPlayer } from './helpers';
+import { getPlayers, calcNextPlayerId } from './helpers';
 
 const getEntitiesFromPos = (entities, pos) => (Object.values(entities).filter(e => isPositionEqual((e.position, pos))));
 const isInvalidPos = (pos, mapSize) => (pos.x === mapSize || pos.x === -1 || pos.y === mapSize || pos.y === -1)  
@@ -86,7 +86,7 @@ export const onMove = (state, action) => {
 
   let players = getPlayers(entities);
   let roundMoves = state.roundMoves + 1;
-  const nextPlayer = calcNextPlayer(players, player.id);
+  const nextPlayer = calcNextPlayerId(players, player.id);
   const turn = nextPlayer.id;
 
   if(isRoundOver(players, roundMoves)) {
