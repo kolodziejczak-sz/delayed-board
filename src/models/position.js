@@ -14,11 +14,11 @@ export function createPosition(x, y, dir) {
 }
 
 export function createRandomPosition(colMin, colMax, rowMin, rowMax) {
-  return {
-    x: getRandomInteger(colMin, colMax),
-    y: getRandomInteger(rowMin, rowMax),
-    dir: 0
-  }
+  return createPosition(
+    getRandomInteger(colMin, colMax),
+    getRandomInteger(rowMin, rowMax),
+    0
+  );
 }
 
 export function movePos(position, dir) {

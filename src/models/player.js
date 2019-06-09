@@ -7,6 +7,7 @@ const playerBase = {
   ...entity,
   type: entities.Player,
   health: generalSettings.maxHealth,
+  isPlaying: true,
   user: null,
   cards: [],
   buffer: [],

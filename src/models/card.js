@@ -1,9 +1,9 @@
 export function createCard(type) {
-  return { type, dir }
+  return { type }
 }
 
 export function createCards(type, number) {
-  return Array(number).fill(null).map(i => createCard(type));
+  return Array(number).fill(null).map(_ => createCard(type));
 }
 
 export function createDeck(obj) {

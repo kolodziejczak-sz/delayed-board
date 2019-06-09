@@ -4,6 +4,7 @@ import dirs from '../../constants/dirs';
 import cards from '../../constants/cards';
 import { movePos, isPositionEqual } from '../../models/position';
 import { createMine } from '../../models/mine';
+import { getPlayers, calcNextPlayer } from './helpers';
 
 const getEntitiesFromPos = (entities, pos) => (Object.values(entities).filter(e => isPositionEqual((e.position, pos))));
 const isInvalidPos = (pos, mapSize) => (pos.x === mapSize || pos.x === -1 || pos.y === mapSize || pos.y === -1)  
@@ -16,15 +17,6 @@ const getWinner = (players) => {
   }
   return null;
 } 
-const getPlayers = (entities) => Object.values(entities).filter(e => e.type === entities.Player);
-
-const calcNextPlayer = (players, currentId) => {
-  const idx = players.findIndex(p => p.id === currentId);
-  if(idx === -1) {
-    throw 'Current player does not exists';
-  }
-  return players[(idx + 1) % players.length];
-}
 
 const switchCardsFromBuffers = (players) => {
   return players.map(p => {
