@@ -2,6 +2,7 @@ import { deckComponents } from '../../constants/settings';
 import { createPlayer } from '../../models/player';
 import { createRandomPosition } from '../../models/position';
 import { createDeck } from '../../models/card';
+import { playersToObject } from './common';
 
 export const onStart = (state, action) => {
   const boardMaxIdx = state.boardSize - 1;
@@ -13,7 +14,7 @@ export const onStart = (state, action) => {
     })
   );
 
-  const entities = [...players].reduce((acc, e) => ((acc[e.id] = e), acc), {});
+  const entities = playersToObject(players);
 
   return {
     ...state,

@@ -22,3 +22,6 @@ export const getNextPlayerId = state => {
   }
   return players[(idx + 1) % players.length].id;
 };
+
+export const playersToObject = players =>
+  players.reduce((acc, e) => ((acc[e.id] = e), acc), {});

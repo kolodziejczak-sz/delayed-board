@@ -1,33 +1,50 @@
-import cards from '../../constants/cards';
-import { movePos, isPositionOutOfRange } from '../../models/position';
-import { createMine } from '../../models/mine';
-import { getNextPlayerId, getWinnerId, getActivePlayers } from './common';
+import {
+  getNextPlayerId,
+  getWinnerId,
+  getActivePlayers,
+  playersToObject,
+} from './common';
+
 import {
   switchFirstCardFromBuffer,
   switchCardToBuffer,
   isPlayerHasCard,
 } from '../../models/player';
 
+import cards from '../../constants/cards';
+import { movePos, isPositionOutOfRange } from '../../models/position';
+import { createMine } from '../../models/mine';
+
 export const onMove = (state, action) => {
+  const card = action.payload.card;
+
   let entities = state.entities;
+  let roundMoves = state.roundMoves;
+  let turn = state.turn;
   let isEnd = false;
   let winner = null;
-  const player = entities[state.turn];
-  const card = action.payload.card;
+  let player = entities[turn];
+  let players = [];
 
   if (!isPlayerHasCard(player, card)) {
     throw 'Invalid move';
   }
 
-  entities[player.id] = switchCardToBuffer(player, card);
-  const turn = getNextPlayerId(state);
-  let roundMoves = state.roundMoves + 1;
+  player = entities[player.id] = switchCardToBuffer(player, card);
+  players = getActivePlayers({ entities });
+  turn = getNextPlayerId(state);
+  roundMoves = roundMoves + 1;
 
-  if (isRoundOver(state, roundMoves)) {
-    entities = executeMoves(entities, state.boardSize);
+  if (isRoundOver(players, roundMoves)) {
+    players = players.map(switchFirstCardFromBuffer);
+    entities = executeMoves(
+      { ...entities, ...playersToObject(players) },
+      state.boardSize
+    );
+
     roundMoves = 0;
 
-    if ((winner = getWinnerId(state))) {
+    if ((winner = getWinnerId({ entities }))) {
       isEnd = true;
     }
   }
@@ -42,16 +59,11 @@ export const onMove = (state, action) => {
   };
 };
 
-const isRoundOver = (state, roundMoves) =>
-  getActivePlayers(state).length === roundMoves;
+const isRoundOver = (players, roundMoves) => players.length === roundMoves;
 
 const executeMoves = (entities, boardSize) => {
   const newEntities = {};
-
-  const playersAfterBufferReload = getActivePlayers({ entities }).map(
-    switchFirstCardFromBuffer
-  );
-  const moves = playersAfterBufferReload.map(p => ({
+  const moves = getActivePlayers({ entities }).map(p => ({
     player: p,
     card: p.cards[0],
   }));
@@ -72,7 +84,7 @@ const executeMoves = (entities, boardSize) => {
         };
         break;
       case cards.Mine:
-        const mine = createMine({ position: currPos });
+        const mine = createMine({ position: player.position });
         newEntities[mine.id] = mine;
         break;
     }

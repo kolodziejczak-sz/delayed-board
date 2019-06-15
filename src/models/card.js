@@ -1,9 +1,12 @@
 import { getUuid } from '../utils/numbers';
+import cards from '../constants/cards';
+import dirs from '../constants/dirs';
 
 export function createCard(type) {
   return {
     id: getUuid(),
     type: Number(type),
+    ...(Number(type) === cards.Move && { dir: dirs.Top }),
   };
 }
 
