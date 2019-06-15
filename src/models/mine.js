@@ -4,11 +4,11 @@ import { getUuid } from '../utils/numbers';
 
 const mineBase = {
   ...entity,
-  type: entities.Mine
-}
+  type: entities.Mine,
+};
 
 export const createMine = (options = {}) => ({
   ...mineBase,
   ...options,
-  id: getUuid()
+  id: getUuid(),
 });

@@ -11,7 +11,7 @@ export function getPlayer(state, id) {
 
 export function getCurrentPlayer(state) {
   const playerId = state.game.turn;
-  return getPlayer(state, playerId)
+  return getPlayer(state, playerId);
 }
 
 export function getWinnerPlayer(state) {

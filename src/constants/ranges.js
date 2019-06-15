@@ -3,5 +3,5 @@ export default {
   Short: 1,
   Long: 2,
   Cross: 3,
-  Full: 4
-}
+  Full: 4,
+};

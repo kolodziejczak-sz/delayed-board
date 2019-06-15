@@ -5,5 +5,5 @@ export default {
   Attack: 4,
   Sniper: 5,
   Grenade: 6,
-  Mine: 7
+  Mine: 7,
 };

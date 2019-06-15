@@ -1,5 +1,4 @@
 export class Storage {
-
   static set(key, value) {
     localStorage.setItem(key, JSON.stringify(value));
   }
@@ -9,7 +8,7 @@ export class Storage {
   }
 
   static has(key) {
-    return (localStorage.getItem(key) !== null);
+    return localStorage.getItem(key) !== null;
   }
 
   static delete(key) {

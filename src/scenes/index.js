@@ -5,5 +5,5 @@ import Config from './Config.svelte';
 export default {
   Config,
   Game,
-  Menu
-}
+  Menu,
+};

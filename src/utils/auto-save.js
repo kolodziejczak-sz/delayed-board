@@ -1,4 +1,4 @@
-import { appUuid }  from '../constants/settings';
+import { appUuid } from '../constants/settings';
 import { Storage } from './storage';
 
 export default function autoSave({ getState }) {
@@ -7,6 +7,6 @@ export default function autoSave({ getState }) {
 
     Storage.set(appUuid, getState());
 
-    return returnValue
-  }
+    return returnValue;
+  };
 }

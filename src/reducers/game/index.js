@@ -19,5 +19,5 @@ const defaultGame = {
 export default createReducers(defaultGame, {
   [types.START]: onStart,
   [types.SURRENDER]: onSurrender,
-  [types.MOVE]: onMove
+  [types.MOVE]: onMove,
 });

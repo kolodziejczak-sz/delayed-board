@@ -1,9 +1,48 @@
+<script>
+  import { onMount } from 'svelte';
+  import store from '../store';
+  import { creators as sceneActions } from '../actions/scene';
+  import { creators as gameActions } from '../actions/game';
+  import {
+    getPlayers,
+    getCurrentPlayer,
+    getWinnerPlayer,
+    isGameEnd,
+  } from '../selectors/game';
+
+  function startGame() {
+    const users = $store.users;
+    store.dispatch(gameActions.start({ users }));
+  }
+
+  function move() {
+    const card = { type: 3, dir: 1 };
+    store.dispatch(gameActions.move({ card }));
+  }
+
+  function changeScene(scene) {
+    store.dispatch(sceneActions.changeScene(scene));
+  }
+
+  function surrender() {
+    store.dispatch(gameActions.surrender());
+  }
+
+  $: currentPlayer = getCurrentPlayer($store);
+  $: players = getPlayers($store);
+  $: winner = getWinnerPlayer($store);
+  $: gameEnd = isGameEnd($store);
+
+  onMount(startGame);
+</script>
+
 <style>
-  .player { display: inline-block;}
+  .player {
+    display: inline-block;
+  }
 </style>
-<div>
-  RoundMoves: { $store.game.roundMoves}
-</div>
+
+<div>RoundMoves: {$store.game.roundMoves} </div>
 {#each players as p}
   <div class="player">
     <div>{p.user.name} {p.user.icon}</div>
@@ -26,36 +65,3 @@
 <button on:click={startGame}>Reset</button>
 <button on:click={surrender}>Surrender</button>
 <button on:click={move}>Move</button>
-
-<script>
-  import { onMount } from 'svelte';
-  import store from '../store';
-  import { creators as sceneActions } from '../actions/scene'
-  import { creators as gameActions } from '../actions/game'
-  import { getPlayers, getCurrentPlayer, getWinnerPlayer, isGameEnd } from '../selectors/game'
-
-  function startGame() {
-    const users = $store.users;
-    store.dispatch(gameActions.start({ users }))
-  }
-
-  function move() {
-    const card = { type: 3, dir: 1 }
-    store.dispatch(gameActions.move({ card }));
-  }
-
-  function changeScene(scene) {
-    store.dispatch(sceneActions.changeScene(scene));
-  }
-
-  function surrender() {
-    store.dispatch(gameActions.surrender());
-  }
-
-  $: currentPlayer = getCurrentPlayer($store);
-  $: players = getPlayers($store);
-  $: winner = getWinnerPlayer($store);
-  $: gameEnd = isGameEnd($store);
-
-  onMount(startGame);
-</script>
