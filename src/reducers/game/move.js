@@ -31,8 +31,8 @@ export const onMove = (state, action) => {
   }
 
   player = entities[player.id] = switchCardToBuffer(player, card);
-  players = getActivePlayers({ entities });
-  turn = getNextPlayerId(state);
+  players = getActivePlayers(entities);
+  turn = getNextPlayerId(entities, turn);
   roundMoves = roundMoves + 1;
 
   if (isRoundOver(players, roundMoves)) {
@@ -44,7 +44,7 @@ export const onMove = (state, action) => {
 
     roundMoves = 0;
 
-    if ((winner = getWinnerId({ entities }))) {
+    if ((winner = getWinnerId(entities))) {
       isEnd = true;
     }
   }
@@ -63,7 +63,7 @@ const isRoundOver = (players, roundMoves) => players.length === roundMoves;
 
 const executeMoves = (entities, boardSize) => {
   const newEntities = {};
-  const moves = getActivePlayers({ entities }).map(p => ({
+  const moves = getActivePlayers(entities).map(p => ({
     player: p,
     card: p.cards[0],
   }));
