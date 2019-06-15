@@ -1,14 +1,14 @@
 import cards from '../../constants/cards';
 import { movePos } from '../../models/position';
 import { createMine } from '../../models/mine';
-import { getPlayers, calcNextPlayerId, getWinnerId } from './helpers';
+import { getPlayers, getNextPlayerId, getWinnerId, getActivePlayers } from './helpers';
 
-const isRoundOver = (players, roundMoves) => (players.length === roundMoves);
+const isRoundOver = (state, roundMoves) => (getActivePlayers(state) === roundMoves);
 const isPlayerHasCard = (player, card) => Boolean(player.cards.find(c => c.type === card.type));
 const isInvalidPos = (pos, boardSize) => (pos.x === boardSize || pos.x === -1 
                                        || pos.y === boardSize || pos.y === -1)  
 
-const switchCardsFromBuffers = (players) => {
+const switchFirstCardFromBuffer = (players) => {
   return players.map(p => {
     const [head, ...restBuffer] =  p.buffer;
     return {
@@ -22,6 +22,7 @@ const switchCardsFromBuffers = (players) => {
 const switchCardToBuffer = (player, card) => {
   const cards = player.cards;
   const cardIdx = cards.findIndex(c => c.type === card.type);
+  // TODO: ZZAMIENIC TYPE NA ID 
   if(cardIdx === -1) {
     throw 'Switching cards: invalid move';
   }
@@ -29,16 +30,16 @@ const switchCardToBuffer = (player, card) => {
   return {
     ...player,
     cards: cards.slice(cardIdx, cardIdx + 1),
-    // TODO: POPRAWIĆ
     buffer: [ ...player.buffer, card]
   }
 }
 
 const executeMoves = (entities, boardSize) => {
   const newEntities = {};
-  const players = Object.values(entities.filter(e => e.type === entities.Player));
-  const moves = players.filter(e => e.type === entities.Player)
+  const playersAfterBufferReload = switchFirstCardFromBuffer(getPlayers());
+  const moves = playersAfterBufferReload.filter(e => e.type === entities.Player)
                   .map(p => ({ player: p, card: p.cards[0] }));
+
 
   moves.forEach(({ player, card }) => {
     switch(card.type) {
@@ -63,28 +64,22 @@ const executeMoves = (entities, boardSize) => {
 }
 
 export const onMove = (state, action) => {
-  const card = action.payload.card;
   let entities = state.entities;
-  let player = entities[state.turn];
   let isEnd = false;
   let winner = null;
+  const card = action.payload.card;
+  const player = entities[state.turn];
 
   if(!isPlayerHasCard(player, card)) {
     throw 'Invalid move';
   }
 
-  player = switchCardToBuffer(player, card);
-  console.log(player);
-
-  let players = getPlayers(state);
+  entities[player.id] = switchCardToBuffer(player, card);
+  const turn = getNextPlayerId(state);
   let roundMoves = state.roundMoves + 1;
-  const nextPlayerId = calcNextPlayerId(state);
-  const turn = nextPlayerId;
 
-  if(isRoundOver(players, roundMoves)) {
-    players = switchCardsFromBuffers(players);
-    entities = executeMoves(players, state.boardSize);
-    players = getPlayers({ entities });
+  if(isRoundOver(state, roundMoves)) {
+    entities = executeMoves(entities, state.boardSize);
     roundMoves = 0;
 
     if(winner = getWinnerId(state)) {

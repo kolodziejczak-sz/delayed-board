@@ -1,3 +1,6 @@
+<p>
+  {JSON.stringify($store.game)}
+</p>
 {#each players as p}
   {p.user.name} {p.user.icon} : {JSON.stringify(p.position)}
 {/each}

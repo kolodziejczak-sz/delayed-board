@@ -1,5 +1,10 @@
+import { getUuid } from '../utils/numbers';
+
 export function createCard(type) {
-  return { type: Number(type) }
+  return { 
+    id: getUuid(),
+    type: Number(type)
+  }
 }
 
 export function createCards(type, number) {

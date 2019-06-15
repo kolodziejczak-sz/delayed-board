@@ -1,9 +1,7 @@
 import entities from '../../constants/entities';
 
 export const getPlayers = (state) => Object.values(state.entities).filter(e => e.type === entities.Player);
-export const getActivePlayers = (state) => {
-  return getPlayers(state).filter(p => p.isPlaying);
-}
+export const getActivePlayers = (state) => getPlayers(state).filter(p => p.isPlaying);
 
 export const getWinnerId = (state, excludePlayerId = null) => {
   const players = getActivePlayers(state).filter(p => p.id !== excludePlayerId);
@@ -14,7 +12,7 @@ export const getWinnerId = (state, excludePlayerId = null) => {
   return null;
 } 
 
-export const calcNextPlayerId = (state) => {
+export const getNextPlayerId = (state) => {
   const players = getActivePlayers(state);
   const currentId = state.turn;
   const idx = players.findIndex(p => p.id === currentId);
