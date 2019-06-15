@@ -37,3 +37,8 @@ export function movePos(position, dir) {
 export function isPositionEqual(pos1, pos2) {
   return (pos1.x === pos2.x && pos1.y === pos2.y);
 }
+
+export function isPositionOutOfRange(pos, range) {
+  return (pos.x === range || pos.x === -1 
+       || pos.y === range || pos.y === -1)  
+}

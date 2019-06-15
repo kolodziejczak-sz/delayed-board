@@ -1,4 +1,4 @@
-import { getWinnerId, getNextPlayerId } from './helpers';
+import { getWinnerId, getNextPlayerId } from './common';
 
 export const onSurrender = (state) => {
   const currentPlayerId = state.turn;

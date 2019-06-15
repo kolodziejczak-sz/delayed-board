@@ -19,3 +19,28 @@ export const createPlayer = (user, options = {}) => ({
   id: getUuid(),
   user,
 });
+
+export const switchCardToBuffer = (player, card) => {
+  const cards = player.cards;
+  const cardIdx = cards.findIndex(c => c.type === card.type);
+  // TODO: ZZAMIENIC TYPE NA ID 
+  if(cardIdx === -1) {
+    throw 'Switching cards: invalid move';
+  }
+  return {
+    ...player,
+    cards: cards.filter((_, idx) => idx !== cardIdx),
+    buffer: [ ...player.buffer, card]
+  }
+}
+
+export const switchFirstCardFromBuffer = (player) => {
+  const [head, ...restBuffer] =  player.buffer;
+  return {
+    ...player,
+    buffer: restBuffer,
+    cards: [ head, ...player.cards ]
+  }
+}
+
+export const isPlayerHasCard = (player, card) => Boolean(player.cards.find(c => c.type === card.type));

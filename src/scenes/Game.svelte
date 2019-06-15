@@ -1,8 +1,18 @@
-<p>
-  {JSON.stringify($store.game)}
-</p>
+<style>
+  .player { display: inline-block;}
+</style>
+<div>
+  RoundMoves: { $store.game.roundMoves}
+</div>
 {#each players as p}
-  {p.user.name} {p.user.icon} : {JSON.stringify(p.position)}
+  <div class="player">
+    <div>{p.user.name} {p.user.icon}</div>
+    <div>cards: {p.cards.length}</div>
+    <div>buffer: {p.buffer.length}</div>
+    <div>health: {p.health}</div>
+    <div>isPlaying: {p.isPlaying}</div>
+    <div>position: {JSON.stringify(p.position)}</div>
+  </div>
 {/each}
 {#if currentPlayer}
   <h1>Player turn: {currentPlayer.user.name}</h1>
