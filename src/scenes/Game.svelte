@@ -40,6 +40,7 @@
   onMount(startGame);
 </script>
 
+<div>RoundCounter: {$store.game.roundCounter} </div>
 <div>RoundMoves: {$store.game.roundMoves} </div>
 {#each players as player}
   <PlayerStats {player} />

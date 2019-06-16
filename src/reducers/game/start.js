@@ -20,7 +20,7 @@ export const onStart = (state, action) => {
     ...state,
     isEnd: false,
     entities,
-    round: 0,
+    roundCounter: 0,
     roundMoves: 0,
     turn: players[0].id,
   };

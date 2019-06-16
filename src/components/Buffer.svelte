@@ -6,7 +6,6 @@
 <style>
   .buffer {
     display: flex;
-    flex-direction: column;
   }
 </style>
 
