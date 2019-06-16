@@ -8,9 +8,9 @@
   export let disabled = false;
   const emit = createEventDispatcher();
 
-  function emitSelect() {
+  function emitSelectedCard() {
     if (!disabled) {
-      emit('select', { card });
+      emit('cardSelect', { card });
     }
   }
 </script>
@@ -52,7 +52,7 @@
   }
 </style>
 
-<button class="card {disabled && 'card--disabled'}" on:click={emitSelect}>
+<button class="card {disabled && 'card--disabled'}" on:click={emitSelectedCard}>
   <div>{flip(cards)[card.type]}</div>
   {#if card.type == cards.Move}
     <div class="move">

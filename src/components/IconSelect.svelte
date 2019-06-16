@@ -8,14 +8,14 @@
   $: selectedIdx = icons.indexOf(selected);
 
   function next() {
-    emitSelect((selectedIdx + 1) % icons.length);
+    emitSelectedIcon((selectedIdx + 1) % icons.length);
   }
   function prev() {
-    emitSelect((selectedIdx - 1 + icons.length) % icons.length);
+    emitSelectedIcon((selectedIdx - 1 + icons.length) % icons.length);
   }
 
-  function emitSelect(idx) {
-    emit('select', { icon: icons[idx] });
+  function emitSelectedIcon(idx) {
+    emit('iconSelect', { icon: icons[idx] });
   }
 </script>
 

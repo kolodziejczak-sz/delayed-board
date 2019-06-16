@@ -5,6 +5,6 @@
 
 <div class="cards">
   {#each items as card (card.id)}
-    <Card {card} on:select />
+    <Card {card} on:cardSelect />
   {/each}
 </div>

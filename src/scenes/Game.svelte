@@ -51,7 +51,7 @@
 <Board size={$store.game.boardSize} entities={Object.values($store.game.entities)} />
 {#if currentPlayer}
   <h1>Player turn: {currentPlayer.user.name}</h1>
-  <Cards items={currentPlayer.cards} on:select={move} />
+  <Cards items={currentPlayer.cards} on:cardSelect={move} />
   <Buffer items={currentPlayer.buffer} />
 {/if}
 

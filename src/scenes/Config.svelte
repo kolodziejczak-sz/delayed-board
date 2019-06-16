@@ -14,6 +14,6 @@
   }
 </script>
 
-<Users users={$store.users} on:update={updateUser} />
+<Users users={$store.users} on:userUpdate={updateUser} />
 <button on:click={_ => changeScene('Menu')}>Menu</button>
 <button on:click={_ => changeScene('Game')}>Game</button>

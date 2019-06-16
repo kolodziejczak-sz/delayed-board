@@ -1,26 +1,36 @@
 <script>
+  import { createEventDispatcher } from 'svelte';
+  import { css } from 'emotion';
   import { generalSettings } from '../constants/settings.js';
   import { isPostionEqual } from '../models/position.js';
-  import { css } from 'emotion';
+  import flip from '../utils/flip.js';
+  import dirs from '../constants/dirs.js';
 
   export let size = generalSettings.boardSize;
   export let entities = [];
-  const blockSize = '2em';
-  const blockStyles = css`
+  export let disabled = false;
+  const boxSize = '2em';
+  const boxStyles = css`
     display: inline-block;
     box-sizing: border-box;
-    width: ${blockSize};
-    height: ${blockSize};
+    width: ${boxSize};
+    height: ${boxSize};
   `;
   const entityStyles = css`
     display: inline-block;
     position: absolute;
-    width: calc(${blockSize} / 2);
-    height: calc(${blockSize} / 2);
+    width: calc(${boxSize} / 2);
+    height: calc(${boxSize} / 2);
     transform: translate(50%, 50%);
     border-radius: 50%;
     transition: 200ms ease-in-out;
   `;
+  const emit = createEventDispatcher();
+  function emitSelectedPosition(position) {
+    if (!disabled) {
+      emit('positionSelect', { position });
+    }
+  }
 </script>
 
 <style>
@@ -32,10 +42,10 @@
   .row {
     display: flex;
   }
-  .row:nth-child(odd) .block:nth-child(odd) {
+  .row:nth-child(odd) .box:nth-child(odd) {
     background: rgba(0, 0, 0, 0.2);
   }
-  .row:nth-child(even) .block:nth-child(even) {
+  .row:nth-child(even) .box:nth-child(even) {
     background: rgba(0, 0, 0, 0.2);
   }
 
@@ -51,13 +61,15 @@
   {#each entities as e (e.id)}
     <div
       class="entity {entityStyles}"
-      style={`top: calc(${e.position.y} * ${blockSize});
-              left: calc(${e.position.x} * ${blockSize})`} />
+      style={`top: calc(${e.position.y} * ${boxSize});
+              left: calc(${e.position.x} * ${boxSize})`}>
+       {flip(dirs)[e.position.dir]}
+    </div>
   {/each}
   {#each [...Array(size)] as x}
     <div class="row">
       {#each [...Array(size)] as y}
-        <div class="block {blockStyles}" />
+        <div class="box {boxStyles}" on:click={emitSelectedPosition} />
       {/each}
     </div>
   {/each}
