@@ -26,6 +26,7 @@
     "node": "10.3.0"
   },
   "dependencies": {
+    "emotion": "^10.0.9",
     "express": "^4.17.0",
     "pixi.js": "^5.0.3",
     "redux": "^4.0.1",

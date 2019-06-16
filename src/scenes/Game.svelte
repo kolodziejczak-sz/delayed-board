@@ -3,8 +3,10 @@
   import store from '../store';
   import { creators as sceneActions } from '../actions/scene';
   import { creators as gameActions } from '../actions/game';
-  import Player from '../components/Player.svelte';
+  import PlayerStats from '../components/PlayerStats.svelte';
+  import Board from '../components/Board.svelte';
   import Cards from '../components/Cards.svelte';
+  import Buffer from '../components/Buffer.svelte';
   import {
     getPlayers,
     getCurrentPlayer,
@@ -40,16 +42,17 @@
 
 <div>RoundMoves: {$store.game.roundMoves} </div>
 {#each players as player}
-  <Player {player} />
+  <PlayerStats {player} />
 {/each}
 {#if gameEnd}
   <h1>GAME OVER</h1>
   <h1>The winner is {winner.user.name}</h1>
 {/if}
-
+<Board size={$store.game.boardSize} entities={Object.values($store.game.entities)} />
 {#if currentPlayer}
   <h1>Player turn: {currentPlayer.user.name}</h1>
-  <Cards items={currentPlayer.cards} on:click={move} />
+  <Cards items={currentPlayer.cards} on:select={move} />
+  <Buffer items={currentPlayer.buffer} />
 {/if}
 
 <button on:click={_ => changeScene('Menu')}>Menu</button>
