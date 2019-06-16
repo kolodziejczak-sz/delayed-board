@@ -25,4 +25,4 @@ export const getNextPlayerId = (entitiesObj, currentTurn) => {
 };
 
 export const playersToObject = players =>
-  players.reduce((acc, e) => ((acc[e.id] = e), acc), {});
+  players.reduce((obj, p) => ((obj[p.id] = p), obj), {});

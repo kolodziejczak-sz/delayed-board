@@ -17,12 +17,7 @@ import { createMine } from '../../models/mine';
 
 export const onMove = (state, action) => {
   const card = action.payload.card;
-
-  let entities = state.entities;
-  let roundMoves = state.roundMoves;
-  let turn = state.turn;
-  let isEnd = false;
-  let winner = null;
+  let { entities, roundCounter, roundMoves, turn, isEnd, winner } = state;
   let player = entities[turn];
   let players = [];
 
@@ -36,13 +31,14 @@ export const onMove = (state, action) => {
   roundMoves = roundMoves + 1;
 
   if (isRoundOver(players, roundMoves)) {
+    roundMoves = 0;
+    roundCounter = roundCounter + 1;
+
     players = players.map(switchFirstCardFromBuffer);
     entities = executeMoves(
       { ...entities, ...playersToObject(players) },
       state.boardSize
     );
-
-    roundMoves = 0;
 
     if ((winner = getWinnerId(entities))) {
       isEnd = true;
@@ -53,6 +49,7 @@ export const onMove = (state, action) => {
     ...state,
     turn,
     roundMoves,
+    roundCounter,
     isEnd,
     winner,
     entities,

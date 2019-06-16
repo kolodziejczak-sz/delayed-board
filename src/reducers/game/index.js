@@ -8,8 +8,8 @@ import { onStart } from './start';
 
 const defaultGame = {
   ...gameSettings,
-  round: 0,
-  roundMoves: [],
+  roundCounter: 0,
+  roundMoves: 0,
   turn: null,
   isEnd: null,
   winner: null,
