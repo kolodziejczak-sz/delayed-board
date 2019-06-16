@@ -1,6 +1,6 @@
 <script>
   import { createEventDispatcher } from 'svelte';
-  import { creators as usersActions } from '../actions/users';
+  import { creators as usersActions } from '../redux/users';
   import IconSelect from '../components/IconSelect.svelte';
 
   export let users = [];

@@ -1,8 +1,8 @@
 <script>
   import { onMount } from 'svelte';
   import store from '../store';
-  import { creators as sceneActions } from '../actions/scene';
-  import { creators as gameActions } from '../actions/game';
+  import { creators as sceneActions } from '../redux/scene';
+  import { creators as gameActions } from '../redux/game';
   import PlayerStats from '../components/PlayerStats.svelte';
   import Board from '../components/Board.svelte';
   import Cards from '../components/Cards.svelte';

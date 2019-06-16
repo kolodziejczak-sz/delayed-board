@@ -1,3 +1,4 @@
+import Immutable from 'seamless-immutable';
 import { deckComponents } from '../../constants/settings';
 import { createPlayer } from '../../models/player';
 import { createRandomPosition } from '../../models/position';
@@ -16,12 +17,11 @@ export const onStart = (state, action) => {
 
   const entities = playersToObject(players);
 
-  return {
-    ...state,
+  return Immutable.merge(state, {
     isEnd: false,
     entities,
     roundCounter: 0,
     roundMoves: 0,
     turn: players[0].id,
-  };
+  });
 };

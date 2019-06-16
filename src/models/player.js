@@ -43,5 +43,5 @@ export const switchFirstCardFromBuffer = player => {
   };
 };
 
-export const isPlayerHasCard = (player, card) =>
+export const doesPlayerHaveCard = (player, card) =>
   Boolean(player.cards.find(c => c.type === card.type));

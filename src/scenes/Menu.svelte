@@ -1,6 +1,6 @@
 <script>
   import store from '../store';
-  import { creators as sceneActions } from '../actions/scene';
+  import { creators as sceneActions } from '../redux/scene';
 
   function changeScene(scene) {
     store.dispatch(sceneActions.changeScene(scene));

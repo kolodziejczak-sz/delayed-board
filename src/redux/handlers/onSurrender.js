@@ -1,3 +1,4 @@
+import Immutable from 'seamless-immutable';
 import { getWinnerId, getNextPlayerId } from './common';
 
 export const onSurrender = state => {
@@ -7,8 +8,7 @@ export const onSurrender = state => {
   const isEnd = Boolean(winner);
   const nextPlayerId = isEnd ? null : getNextPlayerId(entities, currentPlayerId);
 
-  return {
-    ...state,
+  return Immutable.merge(state, {
     isEnd,
     winner,
     turn: nextPlayerId,
@@ -22,5 +22,5 @@ export const onSurrender = state => {
         },
       }
     ),
-  };
+  });
 };

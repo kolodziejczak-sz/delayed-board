@@ -1,3 +1,4 @@
+import Immutable from 'seamless-immutable';
 import {
   getNextPlayerId,
   getWinnerId,
@@ -8,7 +9,7 @@ import {
 import {
   switchFirstCardFromBuffer,
   switchCardToBuffer,
-  isPlayerHasCard,
+  doesPlayerHaveCard,
 } from '../../models/player';
 
 import cards from '../../constants/cards';
@@ -16,16 +17,17 @@ import { movePos, isPositionOutOfRange } from '../../models/position';
 import { createMine } from '../../models/mine';
 
 export const onMove = (state, action) => {
-  const card = action.payload.card;
+  const { card } = action.payload;
   let { entities, roundCounter, roundMoves, turn, isEnd, winner } = state;
   let player = entities[turn];
   let players = [];
 
-  if (!isPlayerHasCard(player, card)) {
+  if (!doesPlayerHaveCard(player, card)) {
     throw 'Invalid move';
   }
 
-  player = entities[player.id] = switchCardToBuffer(player, card);
+  Immutable.setIn(state, ['entities', player.id], switchCardToBuffer(player, card));
+
   players = getActivePlayers(entities);
   turn = getNextPlayerId(entities, turn);
   roundMoves = roundMoves + 1;
@@ -35,9 +37,12 @@ export const onMove = (state, action) => {
     roundCounter = roundCounter + 1;
 
     players = players.map(switchFirstCardFromBuffer);
-    entities = executeMoves(
-      { ...entities, ...playersToObject(players) },
-      state.boardSize
+
+    // TODO: investigate mutations, throws error after second move
+    Immutable.setIn(
+      state,
+      ['entities'],
+      executeMoves({ ...entities, ...playersToObject(players) }, state.boardSize)
     );
 
     if ((winner = getWinnerId(entities))) {
@@ -45,15 +50,14 @@ export const onMove = (state, action) => {
     }
   }
 
-  return {
-    ...state,
+  return Immutable.merge(state, {
     turn,
     roundMoves,
     roundCounter,
     isEnd,
     winner,
     entities,
-  };
+  });
 };
 
 const isRoundOver = (players, roundMoves) => players.length === roundMoves;

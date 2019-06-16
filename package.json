@@ -29,7 +29,9 @@
     "emotion": "^10.0.9",
     "express": "^4.17.0",
     "pixi.js": "^5.0.3",
+    "ramda": "^0.26.1",
     "redux": "^4.0.1",
-    "redux-arc": "^0.7.5"
+    "redux-arc": "^0.7.5",
+    "seamless-immutable": "^7.1.4"
   }
 }
