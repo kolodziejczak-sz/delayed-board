@@ -42,7 +42,6 @@ export const getWinnerId = (entitiesObj, excludePlayerId = null) => {
   return null;
 };
 
-// TODO: refactor to something like doesNextPlayerExist. Current logic seems to be redundant.
 export const getNextPlayerIdByTurn = (entitiesObj, currentTurn) => {
   const players = getActivePlayers(entitiesObj);
   const currentTurnPlayerId = findIndex(where({ id: equals(currentTurn) }), players);
