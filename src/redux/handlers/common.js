@@ -15,6 +15,9 @@ import {
   filter,
   values,
   mergeRight,
+  gt,
+  reject,
+  head,
   __,
 } from 'ramda';
 
@@ -24,16 +27,23 @@ export const getActivePlayers = entitiesObj =>
 export const getPlayers = entitiesObj =>
   filter(where({ type: equals(entities.Player) }), values(entitiesObj));
 
+const getPlayersAlive = filter(where({ health: gt(__, 0) }));
+const getPlayersWithoutPlayerWithId = playerId => reject(where({ id: equals(playerId) }));
+
 export const getWinnerId = (entitiesObj, excludePlayerId = null) => {
-  const players = getActivePlayers(entitiesObj).filter(p => p.id !== excludePlayerId);
-  const playersAlive = players.filter(p => p.health > 0);
-  if (playersAlive.length === 1) {
-    return playersAlive[0].id;
+  const players = getPlayersWithoutPlayerWithId(excludePlayerId)(
+    getActivePlayers(entitiesObj)
+  );
+  const playersAlive = getPlayersAlive(players);
+
+  if (equals(playersAlive.length, 1)) {
+    return head(playersAlive).id;
   }
   return null;
 };
 
-export const getNextPlayerId = (entitiesObj, currentTurn) => {
+// TODO: refactor to something like doesNextPlayerExist. Current logic seems to be redundant.
+export const getNextPlayerIdByTurn = (entitiesObj, currentTurn) => {
   const players = getActivePlayers(entitiesObj);
   const currentTurnPlayerId = findIndex(where({ id: equals(currentTurn) }), players);
 

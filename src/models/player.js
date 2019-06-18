@@ -20,7 +20,7 @@ export const createPlayer = (user, options = {}) => ({
   user,
 });
 
-export const switchCardToBuffer = (player, card) => {
+export const movePlayerCardToPlayerBuffer = (player, card) => {
   const cards = player.cards;
   const cardIdx = cards.findIndex(c => c.id === card.id);
   if (cardIdx === -1) {
@@ -33,9 +33,9 @@ export const switchCardToBuffer = (player, card) => {
   };
 };
 
-export const switchFirstCardFromBuffer = player => {
+export const moveFirstCardFromPlayerBufferToPlayerCards = player => {
   const [head, ...restBuffer] = player.buffer;
-  console.log('FROM BUFFER TO CARD', head);
+
   return {
     ...player,
     buffer: restBuffer,

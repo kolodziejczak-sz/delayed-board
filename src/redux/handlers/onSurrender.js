@@ -1,12 +1,12 @@
 import Immutable from 'seamless-immutable';
-import { getWinnerId, getNextPlayerId } from './common';
+import { getWinnerId, getNextPlayerIdByTurn } from './common';
 
 export const onSurrender = state => {
   const currentPlayerId = state.turn;
   const entities = state.entities;
   const winner = getWinnerId(entities, currentPlayerId);
   const isEnd = Boolean(winner);
-  const nextPlayerId = isEnd ? null : getNextPlayerId(entities, currentPlayerId);
+  const nextPlayerId = isEnd ? null : getNextPlayerIdByTurn(entities, currentPlayerId);
 
   return Immutable.merge(state, {
     isEnd,

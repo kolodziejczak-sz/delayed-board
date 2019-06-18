@@ -21,8 +21,11 @@ const initialState = Immutable([
   },
 ]);
 
-const onUpdateUser = (state, action) =>
-  map(when(propEq('id', action.payload.id), mergeRight(__, action.payload)), state);
+const onUpdateUser = (state, action) => {
+  const update = action.payload;
+
+  return map(when(propEq('id', update.id), mergeRight(__, update)), state);
+};
 
 export default createReducers(initialState, {
   [types.UPDATE_USER]: onUpdateUser,

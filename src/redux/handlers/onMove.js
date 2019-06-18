@@ -1,14 +1,16 @@
 import Immutable from 'seamless-immutable';
+import { inc, equals } from 'ramda';
+
 import {
-  getNextPlayerId,
+  getNextPlayerIdByTurn,
   getWinnerId,
   getActivePlayers,
   playersToObject,
 } from './common';
 
 import {
-  switchFirstCardFromBuffer,
-  switchCardToBuffer,
+  moveFirstCardFromPlayerBufferToPlayerCards,
+  movePlayerCardToPlayerBuffer,
   doesPlayerHaveCard,
 } from '../../models/player';
 
@@ -16,53 +18,52 @@ import cards from '../../constants/cards';
 import { movePos, isPositionOutOfRange } from '../../models/position';
 import { createMine } from '../../models/mine';
 
+// TODO: write UT for it
+// TODO: simplify with ramda fns
 export const onMove = (state, action) => {
   const { card } = action.payload;
-  let { entities, roundCounter, roundMoves, turn, isEnd, winner } = state;
-  let player = entities[turn];
-  let players = [];
+  const { entities, roundCounter, roundMoves, turn } = state;
+  const currentPlayer = entities[turn];
 
-  if (!doesPlayerHaveCard(player, card)) {
+  if (!doesPlayerHaveCard(currentPlayer, card)) {
     throw 'Invalid move';
   }
 
-  Immutable.setIn(state, ['entities', player.id], switchCardToBuffer(player, card));
+  const nextState = {
+    entities: {
+      ...entities,
+      [currentPlayer.id]: movePlayerCardToPlayerBuffer(currentPlayer, card),
+    },
+    roundMoves: inc(roundMoves),
+  };
 
-  players = getActivePlayers(entities);
-  turn = getNextPlayerId(entities, turn);
-  roundMoves = roundMoves + 1;
+  nextState.turn = getNextPlayerIdByTurn(nextState.entities, turn);
+  const activePlayers = getActivePlayers(nextState.entities);
 
-  if (isRoundOver(players, roundMoves)) {
-    roundMoves = 0;
-    roundCounter = roundCounter + 1;
+  if (isRoundOver(activePlayers, nextState.roundMoves)) {
+    nextState.roundMoves = 0;
+    nextState.roundCounter = inc(roundCounter);
 
-    players = players.map(switchFirstCardFromBuffer);
+    const players = activePlayers.map(moveFirstCardFromPlayerBufferToPlayerCards);
 
-    // TODO: investigate mutations, throws error after second move
-    Immutable.setIn(
-      state,
-      ['entities'],
-      executeMoves({ ...entities, ...playersToObject(players) }, state.boardSize)
+    nextState.entities = updateActivePlayersPosition(
+      { ...nextState.entities, ...playersToObject(players) },
+      state.boardSize
     );
 
-    if ((winner = getWinnerId(entities))) {
-      isEnd = true;
+    nextState.winner = getWinnerId(entities);
+
+    if (nextState.winner) {
+      nextState.isEnd = true;
     }
   }
 
-  return Immutable.merge(state, {
-    turn,
-    roundMoves,
-    roundCounter,
-    isEnd,
-    winner,
-    entities,
-  });
+  return Immutable.merge(state, nextState);
 };
 
-const isRoundOver = (players, roundMoves) => players.length === roundMoves;
+const isRoundOver = (players, roundMoves) => equals(players.length, roundMoves);
 
-const executeMoves = (entities, boardSize) => {
+const updateActivePlayersPosition = (entities, boardSize) => {
   const newEntities = {};
   const moves = getActivePlayers(entities).map(p => ({
     player: p,
@@ -76,7 +77,7 @@ const executeMoves = (entities, boardSize) => {
         let newPos = movePos(currPos, card.dir);
 
         if (isPositionOutOfRange(newPos, boardSize)) {
-          // TODO: kolizja i dodatkowa animacja
+          // TODO: collisions && animations in separate fn
           return;
         }
         newEntities[player.id] = {
