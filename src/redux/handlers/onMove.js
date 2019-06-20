@@ -18,7 +18,6 @@ import cards from '../../constants/cards';
 import { movePos, isPositionOutOfRange } from '../../models/position';
 import { createMine } from '../../models/mine';
 
-// TODO: write UT for it
 // TODO: simplify with ramda fns
 export const onMove = (state, action) => {
   const { card } = action.payload;
