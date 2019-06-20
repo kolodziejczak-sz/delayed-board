@@ -3,13 +3,13 @@ import { head } from 'ramda';
 import { createPlayerEntities } from '../../models/player';
 
 export const onStart = (state, action) => {
-  const entities = createPlayerEntities(state.boardSize, action.payload.users);
+  const playerEntities = createPlayerEntities(state.boardSize, action.payload.users);
 
   return Immutable.merge(state, {
     isEnd: false,
-    entities,
+    entities: playerEntities,
     roundCounter: 0,
     roundMoves: 0,
-    turn: Number(head(Object.keys(entities))),
+    turn: Number(head(Object.keys(playerEntities))),
   });
 };
