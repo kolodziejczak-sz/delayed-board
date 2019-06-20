@@ -63,6 +63,7 @@ export const getPlayersWithoutPlayerWithId = playerId =>
 export const getPlayersAsObject = players =>
   reduce((acc, obj) => mergeRight(acc, { [prop('id', obj)]: obj }), {}, players);
 
+// TODO: move out from here
 export const getPlayerWithCardMovedToBuffer = (player, card) => {
   const cards = player.cards;
   const cardIdx = cards.findIndex(c => c.id === card.id);
@@ -76,6 +77,7 @@ export const getPlayerWithCardMovedToBuffer = (player, card) => {
   };
 };
 
+// TODO: move out from here
 export const getPlayerWithFirstCardMovedFromBufferToCards = player => {
   const [head, ...restBuffer] = player.buffer;
 
