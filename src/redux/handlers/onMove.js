@@ -1,14 +1,17 @@
 import Immutable from 'seamless-immutable';
-import { inc, equals } from 'ramda';
+import { inc, equals, map, mergeRight } from 'ramda';
 
-import { getNextPlayerIdByTurn, getWinnerId } from './common';
+import {
+  getNextPlayerIdByTurn,
+  getWinnerId,
+  getActivePlayers,
+  getPlayersAsObject,
+} from './common';
 
 import {
   getPlayerWithFirstCardMovedFromBufferToCards,
   getPlayerWithCardMovedToBuffer,
   doesPlayerHaveCard,
-  getActivePlayers,
-  getPlayersAsObject,
 } from '../../models/player';
 
 import cards from '../../constants/cards';
@@ -33,33 +36,31 @@ export const onMove = (state, action) => {
     roundMoves: inc(roundMoves),
   };
 
-  nextState.turn = getNextPlayerIdByTurn(nextState.entities, turn);
-  const activePlayers = getActivePlayers(nextState.entities);
+  let activePlayers = getActivePlayers(nextState.entities);
 
   if (isRoundOver(activePlayers, nextState.roundMoves)) {
     nextState.roundMoves = 0;
     nextState.roundCounter = inc(roundCounter);
 
-    const players = activePlayers.map(getPlayerWithFirstCardMovedFromBufferToCards);
+    activePlayers = map(getPlayerWithFirstCardMovedFromBufferToCards, activePlayers);
 
-    nextState.entities = getEntitiesAfterExecutionFirstCardOfEachActivePlayer(
-      { ...nextState.entities, ...getPlayersAsObject(players) },
+    nextState.entities = getEntitiesAfterCardsExecution(
+      mergeRight(nextState.entities, getPlayersAsObject(activePlayers)),
       state.boardSize
     );
 
-    nextState.winner = getWinnerId(entities);
-
-    if (nextState.winner) {
+    if ((nextState.winner = getWinnerId(entities))) {
       nextState.isEnd = true;
     }
   }
 
+  nextState.turn = getNextPlayerIdByTurn(nextState.entities, turn);
   return Immutable.merge(state, nextState);
 };
 
 const isRoundOver = (players, roundMoves) => equals(players.length, roundMoves);
 
-const getEntitiesAfterExecutionFirstCardOfEachActivePlayer = (entities, boardSize) => {
+const getEntitiesAfterCardsExecution = (entities, boardSize) => {
   const newEntities = {};
   const moves = getActivePlayers(entities).map(p => ({
     player: p,
@@ -73,9 +74,10 @@ const getEntitiesAfterExecutionFirstCardOfEachActivePlayer = (entities, boardSiz
         let newPos = movePos(currPos, card.dir);
 
         if (isPositionOutOfRange(newPos, boardSize)) {
-          // TODO: collisions && animations in separate fn
-          return;
+          // TODO: collision detection
+          newPos = mergeRight(currPos, { dir: newPos.dir });
         }
+
         newEntities[player.id] = {
           ...player,
           position: newPos,

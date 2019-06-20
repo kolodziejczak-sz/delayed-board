@@ -1,5 +1,5 @@
 import { describe } from 'riteway';
-import { createStoreInstance } from '../../../models/store';
+import { createStoreInstance } from './store';
 import { onMove } from '../onMove';
 import {
   reject,
@@ -52,7 +52,7 @@ describe('onMove()', async assert => {
 
   {
     const { turn } = onMove(initialState, action);
-
+    console.log(onMove(initialState, action));
     assert({
       given: 'start game state and action card move top',
       should: 'set turn to next player id',

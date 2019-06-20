@@ -1,24 +1,19 @@
 import {
-  addIndex,
-  map,
-  compose,
   filter,
   where,
   equals,
+  map,
+  pluck,
   T,
   values,
   gt,
   __,
   reject,
-  reduce,
-  mergeRight,
-  prop,
+  zipObj,
 } from 'ramda';
 import entity from './entity';
 import entities from '../constants/entities';
-import { generalSettings, deckComponents } from '../constants/settings';
-import { createRandomPosition } from './position';
-import { createDeck } from './card';
+import { generalSettings } from '../constants/settings';
 import { getUuid } from '../utils/numbers';
 
 const playerBase = {
@@ -37,31 +32,6 @@ export const createPlayer = (user, options = {}) => ({
   id: getUuid(),
   user,
 });
-
-export const createPlayerEntities = (boardSize, users) =>
-  compose(
-    getPlayersAsObject,
-    addIndex(map)((user, idx) =>
-      createPlayer(user, {
-        cards: createDeck(deckComponents),
-        position: createRandomPosition(0, boardSize - 1, idx * 5, idx * 5 + 2),
-      })
-    )
-  )(users);
-
-export const getActivePlayers = entitiesObj =>
-  filter(where({ isPlaying: equals(T()) }), getPlayers(entitiesObj));
-
-export const getPlayers = entitiesObj =>
-  filter(where({ type: equals(entities.Player) }), values(entitiesObj));
-
-export const getPlayersAlive = filter(where({ health: gt(__, 0) }));
-
-export const getPlayersWithoutPlayerWithId = playerId =>
-  reject(where({ id: equals(playerId) }));
-
-export const getPlayersAsObject = players =>
-  reduce((acc, obj) => mergeRight(acc, { [prop('id', obj)]: obj }), {}, players);
 
 // TODO: move out from here
 export const getPlayerWithCardMovedToBuffer = (player, card) => {
@@ -89,4 +59,4 @@ export const getPlayerWithFirstCardMovedFromBufferToCards = player => {
 };
 
 export const doesPlayerHaveCard = (player, card) =>
-  Boolean(player.cards.find(c => c.type === card.type));
+  Boolean(player.cards.find(c => c.id === card.id));

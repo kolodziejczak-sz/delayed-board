@@ -10,8 +10,6 @@ export const { types, creators } = createActions('game', {
   start: _,
   move: _,
   surrender: _,
-  turn: _,
-  end: _,
 });
 
 const initialState = Immutable({

@@ -1,7 +1,9 @@
 import Immutable from 'seamless-immutable';
 import { compose, assocPath, head, pipe, keys, path } from 'ramda';
-import { createPlayerEntities } from './player';
-import { createUser } from './users';
+import { createPlayers } from '../onStart';
+import { getPlayersAsObject } from '../common';
+import { createUser } from '../../../models/user';
+import icons from '../../../constants/icons';
 
 const initialState = Immutable({
   game: {
@@ -19,7 +21,7 @@ const initialState = Immutable({
   scene: {
     current: 'Menu',
   },
-  users: [createUser('User 1', 0), createUser('User 2', 1)],
+  users: [createUser('User 1', icons[0]), createUser('User 2', icons[1])],
 });
 
 export const createStoreInstance = () => ({
@@ -37,7 +39,7 @@ export const createStoreInstance = () => ({
       state =>
         assocPath(
           ['game', 'entities'],
-          createPlayerEntities(state.game.boardSize, state.users),
+          getPlayersAsObject(createPlayers(state.game.boardSize, state.users)),
           state
         )
     )(initialState);
