@@ -63,8 +63,7 @@ export const onMove = (state, action) => {
 
 const isRoundOver = (players, roundMoves) => equals(players.length, roundMoves);
 
-//
-export const updateActivePlayersPosition = (entities, boardSize) => {
+const updateActivePlayersPosition = (entities, boardSize) => {
   const newEntities = {};
   const moves = getActivePlayers(entities).map(p => ({
     player: p,

@@ -1,7 +1,11 @@
+import { addIndex, map, compose } from 'ramda';
 import entity from './entity';
 import entities from '../constants/entities';
-import { generalSettings } from '../constants/settings';
+import { generalSettings, deckComponents } from '../constants/settings';
+import { createRandomPosition } from './position';
+import { createDeck } from './card';
 import { getUuid } from '../utils/numbers';
+import { playersToObject } from '../redux/handlers/common';
 
 const playerBase = {
   ...entity,
@@ -19,6 +23,17 @@ export const createPlayer = (user, options = {}) => ({
   id: getUuid(),
   user,
 });
+
+export const createPlayerEntities = (boardSize, users) =>
+  compose(
+    playersToObject,
+    addIndex(map)((user, idx) =>
+      createPlayer(user, {
+        cards: createDeck(deckComponents),
+        position: createRandomPosition(0, boardSize - 1, idx * 5, idx * 5 + 2),
+      })
+    )
+  )(users);
 
 export const movePlayerCardToPlayerBuffer = (player, card) => {
   const cards = player.cards;

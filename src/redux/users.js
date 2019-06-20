@@ -1,25 +1,13 @@
 import { createReducers, createActions } from 'redux-arc';
 import { __, map, mergeRight, when, propEq } from 'ramda';
-import { getUuid } from '../utils/numbers';
-import icons from '../constants/icons';
 import Immutable from 'seamless-immutable';
+import { createUser } from '../models/users';
 
 export const { types, creators } = createActions('users', {
   updateUser: null,
 });
 
-const initialState = Immutable([
-  {
-    id: getUuid(),
-    icon: icons[0],
-    name: 'User 1',
-  },
-  {
-    id: getUuid(),
-    icon: icons[1],
-    name: 'User 2',
-  },
-]);
+const initialState = Immutable([createUser('User 1', 0), createUser('User 2', 1)]);
 
 const onUpdateUser = (state, action) => {
   const update = action.payload;
