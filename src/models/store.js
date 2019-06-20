@@ -22,12 +22,17 @@ const initialState = Immutable({
   users: [createUser('User 1', 0), createUser('User 2', 1)],
 });
 
-export const createStoreInstance = () =>({
+export const createStoreInstance = () => ({
   state: initialState,
   gameStart(initialState = this.state) {
     this.state = compose(
       assocPath(['game', 'isEnd'], false),
-      state => assocPath(['game', 'turn'], Number(head(Object.keys(state.game.entities))), state),
+      state =>
+        assocPath(
+          ['game', 'turn'],
+          Number(head(Object.keys(state.game.entities))),
+          state
+        ),
       assocPath(['scene', 'current'], 'Game'),
       state =>
         assocPath(
@@ -40,9 +45,20 @@ export const createStoreInstance = () =>({
     return this;
   },
   withOnePlayerInactive(playerEntityId) {
-    const entityId = playerEntityId || pipe(path(['game', 'entities']), keys, head)(this.state);
+    const entityId =
+      playerEntityId ||
+      pipe(
+        path(['game', 'entities']),
+        keys,
+        head
+      )(this.state);
 
-    this.state = assocPath(['game','entities', entityId, 'isPlaying'], false, this.state);
+    this.state = assocPath(
+      ['game', 'entities', entityId, 'isPlaying'],
+      false,
+      this.state
+    );
+
     return this;
-  }
+  },
 });

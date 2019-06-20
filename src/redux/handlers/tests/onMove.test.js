@@ -1,7 +1,19 @@
 import { describe } from 'riteway';
 import { createStoreInstance } from '../../../models/store';
 import { onMove } from '../onMove';
-import { reject, where, equals, inc, omit, pipe, keys, head, filter, values, dec } from 'ramda';
+import {
+  reject,
+  where,
+  equals,
+  inc,
+  omit,
+  pipe,
+  keys,
+  head,
+  filter,
+  values,
+  dec,
+} from 'ramda';
 
 const createActionWithCard = card => ({ type: 'GAME_MOVE', payload: { card } });
 
@@ -34,7 +46,7 @@ describe('onMove()', async assert => {
       given: 'start game state and action card move top',
       should: 'increment round moves',
       actual: roundMoves,
-      expected: inc(initialState.roundMoves)
+      expected: inc(initialState.roundMoves),
     });
   }
 
@@ -50,17 +62,19 @@ describe('onMove()', async assert => {
         keys,
         head,
         Number
-      )(initialState.entities)
+      )(initialState.entities),
     });
   }
 
   {
-    const initialState = createStoreInstance().gameStart().withOnePlayerInactive(61).state.game;
+    const initialState = createStoreInstance()
+      .gameStart()
+      .withOnePlayerInactive(61).state.game;
     const action = createActionWithCard({ id: 34, type: 3, dir: 0 });
     const newState = onMove(initialState, action);
     const winningPlayer = pipe(
       values,
-      filter(where({ isPlaying: equals(true)})),
+      filter(where({ isPlaying: equals(true) })),
       head
     );
 
@@ -71,35 +85,38 @@ describe('onMove()', async assert => {
       given: 'round is going to be over, action card move top',
       should: 'set roundMoves to 0',
       actual: newState.roundMoves,
-      expected: 0
+      expected: 0,
     });
 
     assert({
       given: 'round is going to be over, action card move top',
       should: 'increment roundCounter',
       actual: newState.roundCounter,
-      expected: inc(initialState.roundCounter)
+      expected: inc(initialState.roundCounter),
     });
 
     assert({
       given: 'round is going to be over, action card move top',
       should: 'update players position',
       actual: winningPlayerAfter.position.y,
-      expected: dec(winningPlayerBefore.position.y) >= 0 ? dec(winningPlayerBefore.position.y) : 0
+      expected:
+        dec(winningPlayerBefore.position.y) >= 0
+          ? dec(winningPlayerBefore.position.y)
+          : 0,
     });
 
     assert({
       given: 'round is going to be over, action card move top',
       should: 'set winner to winner-player id',
       actual: newState.winner,
-      expected: winningPlayerAfter.id
+      expected: winningPlayerAfter.id,
     });
 
     assert({
       given: 'winner is truthful, action card move top',
       should: 'set isEnd to true',
       actual: newState.isEnd,
-      expected: true
+      expected: true,
     });
   }
 });
