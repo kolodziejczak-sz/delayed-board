@@ -1,7 +1,7 @@
 <script>
   import store from '../store';
-  import { creators as sceneActions } from '../actions/scene';
-  import { creators as usersActions } from '../actions/users';
+  import { creators as sceneActions } from '../redux/scene';
+  import { creators as usersActions } from '../redux/users';
   import Users from '../components/Users.svelte';
 
   function changeScene(scene) {

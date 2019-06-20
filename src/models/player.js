@@ -1,6 +1,24 @@
+import {
+  addIndex,
+  map,
+  compose,
+  filter,
+  where,
+  equals,
+  T,
+  values,
+  gt,
+  __,
+  reject,
+  reduce,
+  mergeRight,
+  prop,
+} from 'ramda';
 import entity from './entity';
 import entities from '../constants/entities';
-import { generalSettings } from '../constants/settings';
+import { generalSettings, deckComponents } from '../constants/settings';
+import { createRandomPosition } from './position';
+import { createDeck } from './card';
 import { getUuid } from '../utils/numbers';
 
 const playerBase = {
@@ -20,7 +38,33 @@ export const createPlayer = (user, options = {}) => ({
   user,
 });
 
-export const switchCardToBuffer = (player, card) => {
+export const createPlayerEntities = (boardSize, users) =>
+  compose(
+    getPlayersAsObject,
+    addIndex(map)((user, idx) =>
+      createPlayer(user, {
+        cards: createDeck(deckComponents),
+        position: createRandomPosition(0, boardSize - 1, idx * 5, idx * 5 + 2),
+      })
+    )
+  )(users);
+
+export const getActivePlayers = entitiesObj =>
+  filter(where({ isPlaying: equals(T()) }), getPlayers(entitiesObj));
+
+export const getPlayers = entitiesObj =>
+  filter(where({ type: equals(entities.Player) }), values(entitiesObj));
+
+export const getPlayersAlive = filter(where({ health: gt(__, 0) }));
+
+export const getPlayersWithoutPlayerWithId = playerId =>
+  reject(where({ id: equals(playerId) }));
+
+export const getPlayersAsObject = players =>
+  reduce((acc, obj) => mergeRight(acc, { [prop('id', obj)]: obj }), {}, players);
+
+// TODO: move out from here
+export const getPlayerWithCardMovedToBuffer = (player, card) => {
   const cards = player.cards;
   const cardIdx = cards.findIndex(c => c.id === card.id);
   if (cardIdx === -1) {
@@ -33,9 +77,10 @@ export const switchCardToBuffer = (player, card) => {
   };
 };
 
-export const switchFirstCardFromBuffer = player => {
+// TODO: move out from here
+export const getPlayerWithFirstCardMovedFromBufferToCards = player => {
   const [head, ...restBuffer] = player.buffer;
-  console.log('FROM BUFFER TO CARD', head);
+
   return {
     ...player,
     buffer: restBuffer,
@@ -43,5 +88,5 @@ export const switchFirstCardFromBuffer = player => {
   };
 };
 
-export const isPlayerHasCard = (player, card) =>
+export const doesPlayerHaveCard = (player, card) =>
   Boolean(player.cards.find(c => c.type === card.type));

@@ -4,7 +4,7 @@ import logger from './utils/logger';
 import autoSave from './utils/auto-save';
 import { Storage } from './utils/storage';
 import { appUuid } from './constants/settings';
-import rootReducer from './reducers/';
+import rootReducer from './redux';
 
 const loadState = () => {
   return Storage.has(appUuid) ? Storage.get(appUuid) : undefined;
