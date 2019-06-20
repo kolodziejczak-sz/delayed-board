@@ -1,17 +1,14 @@
 import Immutable from 'seamless-immutable';
 import { inc, equals } from 'ramda';
 
-import {
-  getNextPlayerIdByTurn,
-  getWinnerId,
-  getActivePlayers,
-  playersToObject,
-} from './common';
+import { getNextPlayerIdByTurn, getWinnerId } from './common';
 
 import {
-  moveFirstCardFromPlayerBufferToPlayerCards,
-  movePlayerCardToPlayerBuffer,
+  getPlayerWithFirstCardMovedFromBufferToCards,
+  getPlayerWithCardMovedToBuffer,
   doesPlayerHaveCard,
+  getActivePlayers,
+  getPlayersAsObject,
 } from '../../models/player';
 
 import cards from '../../constants/cards';
@@ -31,7 +28,7 @@ export const onMove = (state, action) => {
   const nextState = {
     entities: {
       ...entities,
-      [currentPlayer.id]: movePlayerCardToPlayerBuffer(currentPlayer, card),
+      [currentPlayer.id]: getPlayerWithCardMovedToBuffer(currentPlayer, card),
     },
     roundMoves: inc(roundMoves),
   };
@@ -43,10 +40,10 @@ export const onMove = (state, action) => {
     nextState.roundMoves = 0;
     nextState.roundCounter = inc(roundCounter);
 
-    const players = activePlayers.map(moveFirstCardFromPlayerBufferToPlayerCards);
+    const players = activePlayers.map(getPlayerWithFirstCardMovedFromBufferToCards);
 
-    nextState.entities = updateActivePlayersPosition(
-      { ...nextState.entities, ...playersToObject(players) },
+    nextState.entities = getEntitiesAfterExecutionFirstCardOfEachActivePlayer(
+      { ...nextState.entities, ...getPlayersAsObject(players) },
       state.boardSize
     );
 
@@ -62,7 +59,7 @@ export const onMove = (state, action) => {
 
 const isRoundOver = (players, roundMoves) => equals(players.length, roundMoves);
 
-const updateActivePlayersPosition = (entities, boardSize) => {
+const getEntitiesAfterExecutionFirstCardOfEachActivePlayer = (entities, boardSize) => {
   const newEntities = {};
   const moves = getActivePlayers(entities).map(p => ({
     player: p,

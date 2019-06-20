@@ -1,6 +1,4 @@
-import entities from '../../constants/entities';
 import {
-  reduce,
   gte,
   pipe,
   modulo,
@@ -10,25 +8,15 @@ import {
   prop,
   findIndex,
   equals,
-  T,
   where,
-  filter,
-  values,
-  mergeRight,
-  gt,
-  reject,
   head,
   __,
 } from 'ramda';
-
-export const getActivePlayers = entitiesObj =>
-  filter(where({ isPlaying: equals(T()) }), getPlayers(entitiesObj));
-
-export const getPlayers = entitiesObj =>
-  filter(where({ type: equals(entities.Player) }), values(entitiesObj));
-
-const getPlayersAlive = filter(where({ health: gt(__, 0) }));
-const getPlayersWithoutPlayerWithId = playerId => reject(where({ id: equals(playerId) }));
+import {
+  getActivePlayers,
+  getPlayersAlive,
+  getPlayersWithoutPlayerWithId,
+} from '../../models/player';
 
 export const getWinnerId = (entitiesObj, excludePlayerId = null) => {
   const players = getPlayersWithoutPlayerWithId(excludePlayerId)(
@@ -61,6 +49,3 @@ export const getNextPlayerIdByTurn = (entitiesObj, currentTurn) => {
     () => null
   )(currentTurnPlayerId);
 };
-
-export const playersToObject = players =>
-  reduce((acc, obj) => mergeRight(acc, { [prop('id', obj)]: obj }), {}, players);
