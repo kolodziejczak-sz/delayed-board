@@ -1,7 +1,7 @@
 import { createReducers, createActions } from 'redux-arc';
 import { __, map, mergeRight, when, propEq } from 'ramda';
 import Immutable from 'seamless-immutable';
-import { createUser } from '../models/users';
+import { createUser } from '../models/user';
 
 export const { types, creators } = createActions('users', {
   updateUser: null,
