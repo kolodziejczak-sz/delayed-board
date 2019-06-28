@@ -1,9 +1,9 @@
 import Immutable from 'seamless-immutable';
-import { compose, assocPath, head, pipe, keys, path } from 'ramda';
-import { createPlayers } from '../onStart';
-import { getPlayersAsObject } from '../common';
-import { createUser } from '../../../models/user';
-import icons from '../../../constants/icons';
+import * as R from 'ramda';
+import { createPlayers } from '../game/onStart';
+import { getPlayersAsObject } from '../game/selectors';
+import { createUser } from '../../models/user';
+import icons from '../../constants/icons';
 
 const initialState = Immutable({
   game: {
@@ -27,17 +27,17 @@ const initialState = Immutable({
 export const createStoreInstance = () => ({
   state: initialState,
   gameStart(initialState = this.state) {
-    this.state = compose(
-      assocPath(['game', 'isEnd'], false),
+    this.state = R.compose(
+      R.assocPath(['game', 'isEnd'], false),
       state =>
-        assocPath(
+        R.assocPath(
           ['game', 'turn'],
-          Number(head(Object.keys(state.game.entities))),
+          Number(R.head(Object.keys(state.game.entities))),
           state
         ),
-      assocPath(['scene', 'current'], 'Game'),
+      R.assocPath(['scene', 'current'], 'Game'),
       state =>
-        assocPath(
+        R.assocPath(
           ['game', 'entities'],
           getPlayersAsObject(createPlayers(state.game.boardSize, state.users)),
           state
@@ -49,13 +49,13 @@ export const createStoreInstance = () => ({
   withOnePlayerInactive(playerEntityId) {
     const entityId =
       playerEntityId ||
-      pipe(
-        path(['game', 'entities']),
-        keys,
-        head
+      R.pipe(
+        R.path(['game', 'entities']),
+        R.keys,
+        R.head
       )(this.state);
 
-    this.state = assocPath(
+    this.state = R.assocPath(
       ['game', 'entities', entityId, 'isPlaying'],
       false,
       this.state

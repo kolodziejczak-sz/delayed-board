@@ -1,7 +1,9 @@
 import { createReducers, createActions } from 'redux-arc';
 import Immutable from 'seamless-immutable';
-import { generalSettings as gameSettings } from '../constants/settings';
-import { onStart, onSurrender, onMove } from './handlers';
+import { generalSettings as gameSettings } from '../../constants/settings';
+import { onStart } from './onStart';
+import { onMove } from './onMove';
+import { onSurrender } from './onSurrender';
 
 const _ = null;
 

@@ -1,20 +1,8 @@
-import {
-  filter,
-  where,
-  equals,
-  map,
-  pluck,
-  T,
-  values,
-  gt,
-  __,
-  reject,
-  zipObj,
-} from 'ramda';
 import entity from './entity';
 import entities from '../constants/entities';
 import { generalSettings } from '../constants/settings';
 import { getUuid } from '../utils/numbers';
+import * as R from 'ramda';
 
 const playerBase = {
   ...entity,
@@ -36,13 +24,13 @@ export const createPlayer = (user, options = {}) => ({
 // TODO: move out from here
 export const getPlayerWithCardMovedToBuffer = (player, card) => {
   const cards = player.cards;
-  const cardIdx = cards.findIndex(c => c.id === card.id);
+  const cardIdx = R.findIndex(c => c.id === card.id, cards);
   if (cardIdx === -1) {
     throw 'Switching cards: invalid move';
   }
   return {
     ...player,
-    cards: cards.filter(c => c.id !== card.id),
+    cards: R.filter(c => c.id !== card.id, cards),
     buffer: [...player.buffer, card],
   };
 };
@@ -59,4 +47,4 @@ export const getPlayerWithFirstCardMovedFromBufferToCards = player => {
 };
 
 export const doesPlayerHaveCard = (player, card) =>
-  Boolean(player.cards.find(c => c.id === card.id));
+  Boolean(R.find(c => c.id === card.id, player.cards));

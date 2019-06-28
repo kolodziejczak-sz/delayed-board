@@ -1,19 +1,7 @@
 import { describe } from 'riteway';
 import { createStoreInstance } from './store';
-import { onMove } from '../onMove';
-import {
-  reject,
-  where,
-  equals,
-  inc,
-  omit,
-  pipe,
-  keys,
-  head,
-  filter,
-  values,
-  dec,
-} from 'ramda';
+import { onMove } from '../game/onMove';
+import * as R from 'ramda';
 
 const createActionWithCard = card => ({ type: 'GAME_MOVE', payload: { card } });
 
@@ -31,8 +19,8 @@ describe('onMove()', async assert => {
       actual: { buffer, cards },
       expected: {
         buffer: [card],
-        cards: reject(
-          where({ id: equals(4) }),
+        cards: R.reject(
+          R.where({ id: R.equals(4) }),
           initialState.entities[initialState.turn].cards
         ),
       },
@@ -46,7 +34,7 @@ describe('onMove()', async assert => {
       given: 'start game state and action card move top',
       should: 'increment round moves',
       actual: roundMoves,
-      expected: inc(initialState.roundMoves),
+      expected: R.inc(initialState.roundMoves),
     });
   }
 
@@ -57,10 +45,10 @@ describe('onMove()', async assert => {
       given: 'start game state and action card move top',
       should: 'set turn to next player id',
       actual: turn,
-      expected: pipe(
-        omit([initialState.turn]),
-        keys,
-        head,
+      expected: R.pipe(
+        R.omit([initialState.turn]),
+        R.keys,
+        R.head,
         Number
       )(initialState.entities),
     });
@@ -72,10 +60,10 @@ describe('onMove()', async assert => {
       .withOnePlayerInactive(61).state.game;
     const action = createActionWithCard({ id: 34, type: 3, dir: 0 });
     const newState = onMove(initialState, action);
-    const winningPlayer = pipe(
-      values,
-      filter(where({ isPlaying: equals(true) })),
-      head
+    const winningPlayer = R.pipe(
+      R.values,
+      R.filter(R.where({ isPlaying: R.equals(true) })),
+      R.head
     );
 
     const winningPlayerBefore = winningPlayer(initialState.entities);
@@ -92,7 +80,7 @@ describe('onMove()', async assert => {
       given: 'round is going to be over, action card move top',
       should: 'increment roundCounter',
       actual: newState.roundCounter,
-      expected: inc(initialState.roundCounter),
+      expected: R.inc(initialState.roundCounter),
     });
 
     assert({
@@ -100,8 +88,8 @@ describe('onMove()', async assert => {
       should: 'update players position',
       actual: winningPlayerAfter.position.y,
       expected:
-        dec(winningPlayerBefore.position.y) >= 0
-          ? dec(winningPlayerBefore.position.y)
+        R.dec(winningPlayerBefore.position.y) >= 0
+          ? R.dec(winningPlayerBefore.position.y)
           : 0,
     });
 

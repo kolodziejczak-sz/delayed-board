@@ -1,14 +1,14 @@
 import Immutable from 'seamless-immutable';
-import { addIndex, map } from 'ramda';
+import * as R from 'ramda';
 import { getRandomInteger } from '../../utils/numbers';
 import { deckComponents } from '../../constants/settings';
 import { createRandomPosition } from '../../models/position';
 import { createPlayer } from '../../models/player';
-import { getPlayersAsObject } from './common';
+import { getPlayersAsObject } from './selectors';
 import { createDeck } from '../../models/card';
 
 export const createPlayers = (boardSize, users) => {
-  const mapIndexed = addIndex(map);
+  const mapIndexed = R.addIndex(R.map);
   return mapIndexed(
     (user, idx) =>
       createPlayer(user, {

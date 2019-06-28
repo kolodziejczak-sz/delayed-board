@@ -1,46 +1,32 @@
 import entities from '../../constants/entities';
-import {
-  __,
-  equals,
-  filter,
-  findIndex,
-  head,
-  inc,
-  modulo,
-  pluck,
-  T,
-  reject,
-  values,
-  where,
-  zipObj,
-} from 'ramda';
+import * as R from 'ramda';
 
 export const getActivePlayers = entitiesObj =>
-  filter(where({ isPlaying: equals(T()) }), getPlayers(entitiesObj));
+  R.filter(R.where({ isPlaying: R.equals(R.T()) }), getPlayers(entitiesObj));
 
 export const getPlayers = entitiesObj =>
-  filter(where({ type: equals(entities.Player) }), values(entitiesObj));
+  R.filter(R.where({ type: R.equals(entities.Player) }), R.values(entitiesObj));
 
 export const getPlayersWithoutPlayerWithId = playerId =>
-  reject(where({ id: equals(playerId) }));
+  R.reject(R.where({ id: R.equals(playerId) }));
 
-export const getPlayersAsObject = players => zipObj(pluck('id', players), players);
+export const getPlayersAsObject = players => R.zipObj(R.pluck('id', players), players);
 
 export const getWinnerId = (entitiesObj, excludePlayerId = null) => {
   const players = getPlayersWithoutPlayerWithId(excludePlayerId)(
     getActivePlayers(entitiesObj)
   );
 
-  if (equals(players.length, 1)) {
-    return head(players).id;
+  if (R.equals(players.length, 1)) {
+    return R.head(players).id;
   }
   return null;
 };
 
 export const getNextPlayerIdByTurn = (entitiesObj, currentTurn) => {
   const players = getPlayers(entitiesObj);
-  const currentPlayerIdx = findIndex(where({ id: equals(currentTurn) }), players);
-  const nextIdx = idx => modulo(inc(idx), players.length);
+  const currentPlayerIdx = R.findIndex(R.where({ id: R.equals(currentTurn) }), players);
+  const nextIdx = idx => R.modulo(R.inc(idx), players.length);
 
   for (let p, idx = nextIdx(currentPlayerIdx); idx !== currentPlayerIdx; ) {
     p = players[idx];

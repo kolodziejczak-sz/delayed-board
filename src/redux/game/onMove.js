@@ -1,12 +1,12 @@
 import Immutable from 'seamless-immutable';
-import { inc, equals, map, mergeRight } from 'ramda';
+import * as R from 'ramda';
 
 import {
   getNextPlayerIdByTurn,
   getWinnerId,
   getActivePlayers,
   getPlayersAsObject,
-} from './common';
+} from './selectors';
 
 import {
   getPlayerWithFirstCardMovedFromBufferToCards,
@@ -18,7 +18,6 @@ import cards from '../../constants/cards';
 import { movePos, isPositionOutOfRange } from '../../models/position';
 import { createMine } from '../../models/mine';
 
-// TODO: simplify with ramda fns
 export const onMove = (state, action) => {
   const { card } = action.payload;
   const { entities, roundCounter, roundMoves, turn } = state;
@@ -33,19 +32,19 @@ export const onMove = (state, action) => {
       ...entities,
       [currentPlayer.id]: getPlayerWithCardMovedToBuffer(currentPlayer, card),
     },
-    roundMoves: inc(roundMoves),
+    roundMoves: R.inc(roundMoves),
   };
 
   let activePlayers = getActivePlayers(nextState.entities);
 
   if (isRoundOver(activePlayers, nextState.roundMoves)) {
     nextState.roundMoves = 0;
-    nextState.roundCounter = inc(roundCounter);
+    nextState.roundCounter = R.inc(roundCounter);
 
-    activePlayers = map(getPlayerWithFirstCardMovedFromBufferToCards, activePlayers);
+    activePlayers = R.map(getPlayerWithFirstCardMovedFromBufferToCards, activePlayers);
 
     nextState.entities = getEntitiesAfterCardsExecution(
-      mergeRight(nextState.entities, getPlayersAsObject(activePlayers)),
+      R.mergeRight(nextState.entities, getPlayersAsObject(activePlayers)),
       state.boardSize
     );
 
@@ -58,14 +57,11 @@ export const onMove = (state, action) => {
   return Immutable.merge(state, nextState);
 };
 
-const isRoundOver = (players, roundMoves) => equals(players.length, roundMoves);
+const isRoundOver = (players, roundMoves) => R.equals(players.length, roundMoves);
 
 const getEntitiesAfterCardsExecution = (entities, boardSize) => {
   const newEntities = {};
-  const moves = getActivePlayers(entities).map(p => ({
-    player: p,
-    card: p.cards[0],
-  }));
+  const moves = R.map(p => ({ player: p, card: p.cards[0] }), getActivePlayers(entities));
 
   moves.forEach(({ player, card }) => {
     switch (card.type) {
@@ -75,7 +71,7 @@ const getEntitiesAfterCardsExecution = (entities, boardSize) => {
 
         if (isPositionOutOfRange(newPos, boardSize)) {
           // TODO: collision detection
-          newPos = mergeRight(currPos, { dir: newPos.dir });
+          newPos = R.mergeRight(currPos, { dir: newPos.dir });
         }
 
         newEntities[player.id] = {

@@ -1,5 +1,5 @@
 import Immutable from 'seamless-immutable';
-import { getWinnerId, getNextPlayerIdByTurn } from './common';
+import { getWinnerId, getNextPlayerIdByTurn } from './selectors';
 
 export const onSurrender = state => {
   const entities = state.entities;
